@@ -1,0 +1,17 @@
+{
+  "name": "country-typeahead",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Debounced, keyboard-accessible country typeahead built for the Expert Listing frontend screening task.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "16.3.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
