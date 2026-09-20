@@ -89,7 +89,7 @@ export default function CountryTypeahead() {
         if (requestId !== requestIdRef.current) return; // stale, drop it
         setResults([]);
         setStatus("error");
-        setErrorMessage("Couldn't reach the country database. Please try again.");
+        setErrorMessage("Couldn't reach the country database. Try again.");
       });
   }, []);
 
@@ -169,25 +169,36 @@ export default function CountryTypeahead() {
       <label htmlFor={inputId} className="visually-hidden">
         Search for a country
       </label>
-      <input
-        id={inputId}
-        type="text"
-        role="combobox"
-        aria-expanded={isOpen}
-        aria-controls={listboxId}
-        aria-autocomplete="list"
-        aria-activedescendant={
-          highlightedIndex >= 0 ? `country-option-${highlightedIndex}` : undefined
-        }
-        autoComplete="off"
-        placeholder="e.g. Nigeria, Brazil, Japan..."
-        value={query}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        onFocus={() => results.length > 0 && setIsOpen(true)}
-        onBlur={() => setTimeout(closeList, 100)} // allow click on option first
-        className="input"
-      />
+      <div className="field">
+        <input
+          id={inputId}
+          type="text"
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-controls={listboxId}
+          aria-autocomplete="list"
+          aria-activedescendant={
+            highlightedIndex >= 0 ? `country-option-${highlightedIndex}` : undefined
+          }
+          autoComplete="off"
+          placeholder="e.g. Nigeria, Brazil, Japan..."
+          value={query}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          onFocus={() => results.length > 0 && setIsOpen(true)}
+          onBlur={() => setTimeout(closeList, 100)} // allow click on option first
+          className="input"
+        />
+        <svg
+          className="field-icon"
+          viewBox="0 0 20 20"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M16 16L13 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </svg>
+      </div>
 
       {isOpen && (
         <div className="panel" role="presentation">
@@ -233,8 +244,13 @@ export default function CountryTypeahead() {
                 >
                   <span className="result-name">{country.name?.common}</span>
                   <span className="result-meta">
-                    {country.capital?.[0] ? `${country.capital[0]}, ` : ""}
-                    {country.region}
+                    <span className="result-place">
+                      {country.capital?.[0] ? `${country.capital[0]}, ` : ""}
+                      {country.region}
+                    </span>
+                    {country.cca2 && (
+                      <span className="code-badge">{country.cca2}</span>
+                    )}
                   </span>
                 </li>
               ))}
@@ -245,8 +261,26 @@ export default function CountryTypeahead() {
 
       {selected && (
         <div className="selected-card">
-          Selected: <strong>{selected.name?.common}</strong>
-          {selected.capital?.[0] ? ` — capital: ${selected.capital[0]}` : ""}
+          <svg
+            className="selected-check"
+            viewBox="0 0 20 20"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.4" />
+            <path
+              d="M6.5 10.2l2.3 2.3 4.7-5"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="selected-text">
+            Selected <strong>{selected.name?.common}</strong>
+            {selected.capital?.[0] ? ` — capital: ${selected.capital[0]}` : ""}
+            {selected.cca2 && <span className="selected-code"> · {selected.cca2}</span>}
+          </span>
         </div>
       )}
     </div>
